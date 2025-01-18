@@ -1,8 +1,12 @@
 # CareerMaintenanceFS2024
 
-A One Button Click solution that executed the career maintenance of all your planes in FS2024
+
+A One Button Click solution that executes the career maintenance of all your planes in FS2024
+-
+
 
 ![GUIPicture](https://github.com/user-attachments/assets/37b90705-88fc-40e6-b445-bae94bd0c90d)
+
 
 It will work for Screens with a 16:9 ratio resolution: (3840x2160)(1920x1080)
 
@@ -12,8 +16,13 @@ As a rule as more extrem your screen ratio derivates from 16:9 as more likely it
 It can work with FS2024 in windows mode if you don't resize the window and the full window is visible.
 
 
+Installation:
+--------------
+ Just copy the exe anywhere you like. It is the program itself and directly executeable.
 
+  
 How to use it:
+--------------
 
  1) Execute CareerMaintenane and Execute FS2024
     the order is not important
@@ -24,7 +33,8 @@ How to use it:
 
  4) Press the big Green Start Button
 
- Then Hands away !!!
+ *** Then hands away !!! ***
+ --
 
  Do not move the mouse or do anything but wait.
 
@@ -41,6 +51,7 @@ Best way to stop so far is to press "ESC" wait till it tries the recover and the
 
 
  The Program does this:
+ -
 
  - It moves the mouse out of the way to the top left corner of the screen (0,0);
  - It brings FS2024 to the front and gives it the focus
