@@ -2,6 +2,8 @@
 
 A One Button Click solution that executed the career maintenance of all your planes in FS2024
 
+![GUIPicture](https://github.com/user-attachments/assets/37b90705-88fc-40e6-b445-bae94bd0c90d)
+
 It will work for Screens with a 16:9 ratio resolution: (3840x2160)(1920x1080)
 
 It may or may not work with resolutions not 16:9.
