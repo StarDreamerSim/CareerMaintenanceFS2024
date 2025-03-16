@@ -15,7 +15,7 @@ namespace CareerAutomationTests
         const int cReferenceScreenHeight = 2160;
 
         //Color Check Tolerances 
-        const int cLittleColorToleranceEpsilon = 23;  //increase from 20 to 23 due to Different Aircraft changes Blend Through Background Office Color
+        const int cLittleColorToleranceEpsilon = 24;  //increase from 20 to 24 due to Different Aircraft changes Blend Through Background Office Color
         const int cLargeColorToleranceEpsilon = 52;   //Be care full with adjusting the Large one because that has to fit with the grey detection 203,203,203 +/- 52      
 
         //All Company Screen
@@ -63,20 +63,20 @@ namespace CareerAutomationTests
         static CareerPosAndColor cBuyAricraftInactive = new CareerPosAndColor(130, 995, 255, 222, 3);
 
         static CareerPosAndColor cFirstAircraftNonExist = new CareerPosAndColor(1100, 1800, 110, 96, 88);
-        static CareerPosAndColor cFirstAricraftExistAndInactie = new CareerPosAndColor(1100, 1800, 116, 120, 135); //changed from color 124,120,135
+        static CareerPosAndColor cFirstAricraftExistAndInactie = new CareerPosAndColor(1100, 1800, 116, 120, 140); //changed from color 124,120,135
         static CareerPosAndColor cFirstAircraftExistAndActive = new CareerPosAndColor(1100, 1800, 203, 203, 203); //203+/-52 (185,185,186)
 
-        static CareerPosAndColor cSecondAricraftExistAndInactie = new CareerPosAndColor(1850, 1800, 116, 120, 135); //changed from color 124,120,135
-        static CareerPosAndColor cThirdAricraftExistAndInactie = new CareerPosAndColor(2600, 1800, 116, 120, 135);
-        static CareerPosAndColor cFourthAricraftExistAndInactie = new CareerPosAndColor(3350, 1800, 116, 120, 135);
+        static CareerPosAndColor cSecondAricraftExistAndInactie = new CareerPosAndColor(1850, 1800, 116, 120, 140); //changed from color 124,120,135
+        static CareerPosAndColor cThirdAricraftExistAndInactie = new CareerPosAndColor(2600, 1800, 116, 120, 140);
+        static CareerPosAndColor cFourthAricraftExistAndInactie = new CareerPosAndColor(3350, 1800, 116, 120, 140);
 
         static CareerPosAndColor cSecondAricraftExistAndActive = new CareerPosAndColor(1850, 1800, 203, 203, 203);//203+/-52
         static CareerPosAndColor cThirdAricraftExistAndActive = new CareerPosAndColor(2600, 1800, 203, 203, 203);//203+/-52
 
-        static CareerPosAndColor cNthAricraftExistAndInactie = new CareerPosAndColor(3030, 1800, 116, 120, 135); //changed from color 124,120,135
+        static CareerPosAndColor cNthAricraftExistAndInactie = new CareerPosAndColor(3030, 1800, 116, 120, 140); //changed from color 124,120,135
         static CareerPosAndColor cNthAricraftExistAndActive = new CareerPosAndColor(3030, 1800, 203, 203, 203);//203+/-52
 
-        static CareerPosAndColor cLastAricraftExistAndInactie = new CareerPosAndColor(2990, 1800, 116, 120, 135); //changed from color 124,120,135
+        static CareerPosAndColor cLastAricraftExistAndInactie = new CareerPosAndColor(2990, 1800, 116, 120, 140); //changed from color 124,120,135
         static CareerPosAndColor cLastAricraftExistAndActive = new CareerPosAndColor(2990, 1800, 203, 203, 203);//203+/-52
 
         static CareerPosAndColor cFirstAircraftOpenSubMenuInactive = new CareerPosAndColor(1088, 1828, 52, 111, 195);
@@ -119,6 +119,15 @@ namespace CareerAutomationTests
 
         static int sCompanyNr = 1;
         static int sPlaneNr = 1;
+
+        static bool sDoCheckUp = true;
+        static bool sDoDelegate = true;
+        static bool sDoWash = true;
+
+
+        public static bool DoCheckUp { set { sDoCheckUp = value; } }
+        public static bool DoDelegate { set { sDoDelegate = value; } }
+        public static bool DoWash { set { sDoWash = value; } }
 
 
         public static void StartScript()
@@ -789,37 +798,40 @@ namespace CareerAutomationTests
 
                 for (int vRepeatCheck = 1; vRepeatCheck <= 3; vRepeatCheck++)
                 {
-                    if (IsWashRequired(vCareer) || IsWashSelected(vCareer))
+                    if (sDoWash)
                     {
-                        vCareer.SendKey(vKeyLeft);
-                        vCareer.SendKey(vKeyUp);
-                        vCareer.SendKey(vKeyDown);
-                        Thread.Sleep(100);
-                        bool vExecute = true;
-                        if (!IsWashSelectedWithWait(vCareer))
+                        if (IsWashRequired(vCareer) || IsWashSelected(vCareer))
                         {
-                            //We can have a wrong required detection they screen update is sometimes too slow
-                            //and it seems to init with active
-                            if (!IsWashRequired(vCareer))
-                            {
-                                vExecute = false;
-                            }
-                            SetStatus(iStatusPrefix + " Wash Selection Failed");
-                            return;
-                        }
-                        if (vExecute)
-                        {
+                            vCareer.SendKey(vKeyLeft);
+                            vCareer.SendKey(vKeyUp);
+                            vCareer.SendKey(vKeyDown);
                             Thread.Sleep(100);
-                            vCareer.SendKey(vKeySpace);
-                            Thread.Sleep(100);
-                            if (!IsInSplashScreen(vCareer))
+                            bool vExecute = true;
+                            if (!IsWashSelectedWithWait(vCareer))
                             {
-                                SetStatus(iStatusPrefix + " No confirm Dialog for Wash");
+                                //We can have a wrong required detection they screen update is sometimes too slow
+                                //and it seems to init with active
+                                if (!IsWashRequired(vCareer))
+                                {
+                                    vExecute = false;
+                                }
+                                SetStatus(iStatusPrefix + " Wash Selection Failed");
                                 return;
                             }
-                            Thread.Sleep(200);
-                            vCareer.SendKey(vKeySpace);
-                            Thread.Sleep(200);
+                            if (vExecute)
+                            {
+                                Thread.Sleep(100);
+                                vCareer.SendKey(vKeySpace);
+                                Thread.Sleep(100);
+                                if (!IsInSplashScreen(vCareer))
+                                {
+                                    SetStatus(iStatusPrefix + " No confirm Dialog for Wash");
+                                    return;
+                                }
+                                Thread.Sleep(200);
+                                vCareer.SendKey(vKeySpace);
+                                Thread.Sleep(200);
+                            }
                         }
                     }
                     if (!IsInMaintenanceScreen(vCareer))
@@ -828,34 +840,37 @@ namespace CareerAutomationTests
                         return;
                     }
 
-                    if (IsCheckUpRequired(vCareer) || IsCheckUpSelected(vCareer)) //It will be selected if we enter the menu so required failes that detection
+                    if (sDoCheckUp)
                     {
-                        vCareer.SendKey(vKeyLeft);
-                        vCareer.SendKey(vKeyUp);
-                        Thread.Sleep(100);
-                        bool vExecute = true;
-                        if (!IsCheckUpSelectedWithWait(vCareer))
-                        {   //instead selection it might be a false  detection
-                            if (!IsCheckUpRequired(vCareer))
-                            {
-                                vExecute = false;
-                            }
-                            SetStatus(iStatusPrefix + " CheckUp Selection Failed");
-                            return;
-                        }
-                        if (vExecute)
+                        if (IsCheckUpRequired(vCareer) || IsCheckUpSelected(vCareer)) //It will be selected if we enter the menu so required failes that detection
                         {
+                            vCareer.SendKey(vKeyLeft);
+                            vCareer.SendKey(vKeyUp);
                             Thread.Sleep(100);
-                            vCareer.SendKey(vKeySpace);
-                            Thread.Sleep(100);
-                            if (!IsInSplashScreen(vCareer))
-                            {
-                                SetStatus(iStatusPrefix + " No confirm Dialog for CheckUp");
+                            bool vExecute = true;
+                            if (!IsCheckUpSelectedWithWait(vCareer))
+                            {   //instead selection it might be a false  detection
+                                if (!IsCheckUpRequired(vCareer))
+                                {
+                                    vExecute = false;
+                                }
+                                SetStatus(iStatusPrefix + " CheckUp Selection Failed");
                                 return;
                             }
-                            Thread.Sleep(200);
-                            vCareer.SendKey(vKeySpace);
-                            Thread.Sleep(200);
+                            if (vExecute)
+                            {
+                                Thread.Sleep(100);
+                                vCareer.SendKey(vKeySpace);
+                                Thread.Sleep(100);
+                                if (!IsInSplashScreen(vCareer))
+                                {
+                                    SetStatus(iStatusPrefix + " No confirm Dialog for CheckUp");
+                                    return;
+                                }
+                                Thread.Sleep(200);
+                                vCareer.SendKey(vKeySpace);
+                                Thread.Sleep(200);
+                            }
                         }
                     }
                     if (!IsInMaintenanceScreen(vCareer))
@@ -864,36 +879,39 @@ namespace CareerAutomationTests
                         return;
                     }
 
-                    if (IsDelegateRequired(vCareer) || IsDelegateSelected(vCareer))
+                    if (sDoDelegate)
                     {
-                        vCareer.SendKey(vKeyLeft);
-                        vCareer.SendKey(vKeyUp);
-                        vCareer.SendKey(vKeyRight);
-                        Thread.Sleep(100);
-                        bool vExecute = true;
-                        if (!IsDelegateSelectedWithWait(vCareer))
+                        if (IsDelegateRequired(vCareer) || IsDelegateSelected(vCareer))
                         {
-                            //instead selection it might be a fals DelegateRequired detection
-                            if (!IsDelegateRequired(vCareer))
-                            {
-                                vExecute = false;
-                            }
-                            SetStatus(iStatusPrefix + " Delegate Selection Failed");
-                            return;
-                        }
-                        if (vExecute)
-                        {
+                            vCareer.SendKey(vKeyLeft);
+                            vCareer.SendKey(vKeyUp);
+                            vCareer.SendKey(vKeyRight);
                             Thread.Sleep(100);
-                            vCareer.SendKey(vKeySpace);
-                            Thread.Sleep(100);
-                            if (!IsInSplashScreen(vCareer))
+                            bool vExecute = true;
+                            if (!IsDelegateSelectedWithWait(vCareer))
                             {
-                                SetStatus(iStatusPrefix + " No confirm Dialog for Delegate");
+                                //instead selection it might be a fals DelegateRequired detection
+                                if (!IsDelegateRequired(vCareer))
+                                {
+                                    vExecute = false;
+                                }
+                                SetStatus(iStatusPrefix + " Delegate Selection Failed");
                                 return;
                             }
-                            Thread.Sleep(200);
-                            vCareer.SendKey(vKeySpace);
-                            Thread.Sleep(200);
+                            if (vExecute)
+                            {
+                                Thread.Sleep(100);
+                                vCareer.SendKey(vKeySpace);
+                                Thread.Sleep(100);
+                                if (!IsInSplashScreen(vCareer))
+                                {
+                                    SetStatus(iStatusPrefix + " No confirm Dialog for Delegate");
+                                    return;
+                                }
+                                Thread.Sleep(200);
+                                vCareer.SendKey(vKeySpace);
+                                Thread.Sleep(200);
+                            }
                         }
                     }
                     if (!IsInMaintenanceScreen(vCareer))

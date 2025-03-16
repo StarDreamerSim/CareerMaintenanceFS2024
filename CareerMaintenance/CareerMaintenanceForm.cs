@@ -24,6 +24,11 @@ namespace CareerMaintenance
                 return;
             }
 
+            //Take over GUI Settings
+            CareerMaintenanceScript.DoCheckUp = DoCheckUpCheckBox.Checked;
+            CareerMaintenanceScript.DoDelegate = DoDelegateCheckBox.Checked;
+            CareerMaintenanceScript.DoWash = DoWashCheckBox.Checked;
+
             CareerMaintenanceScript.StartScript();
         }
 
