@@ -14,6 +14,10 @@ namespace CareerAutomationTests
         const int cReferenceScreenWidth = 3840;
         const int cReferenceScreenHeight = 2160;
 
+        //Color Check Tolerances 
+        const int cLittleColorToleranceEpsilon = 23;  //increase from 20 to 23 due to Different Aircraft changes Blend Through Background Office Color
+        const int cLargeColorToleranceEpsilon = 52;   //Be care full with adjusting the Large one because that has to fit with the grey detection 203,203,203 +/- 52      
+
         //All Company Screen
         static CareerPosAndColor cAllCompanyIdentifyActiveFirstTopLeft = new CareerPosAndColor(112, 396, 59, 132, 235);
         static CareerPosAndColor cAllCompanyIdentifyInactiveFirstTopLeft = new CareerPosAndColor(112, 396, 63, 120, 200);
@@ -59,32 +63,32 @@ namespace CareerAutomationTests
         static CareerPosAndColor cBuyAricraftInactive = new CareerPosAndColor(130, 995, 255, 222, 3);
 
         static CareerPosAndColor cFirstAircraftNonExist = new CareerPosAndColor(1100, 1800, 110, 96, 88);
-        static CareerPosAndColor cFirstAricraftExistAndInactie = new CareerPosAndColor(1100, 1800, 124, 120, 135);
+        static CareerPosAndColor cFirstAricraftExistAndInactie = new CareerPosAndColor(1100, 1800, 116, 120, 135); //changed from color 124,120,135
         static CareerPosAndColor cFirstAircraftExistAndActive = new CareerPosAndColor(1100, 1800, 203, 203, 203); //203+/-52 (185,185,186)
 
-        static CareerPosAndColor cSecondAricraftExistAndInactie = new CareerPosAndColor(1850, 1800, 124, 120, 135);
-        static CareerPosAndColor cThirdAricraftExistAndInactie = new CareerPosAndColor(2600, 1800, 124, 120, 135);
-        static CareerPosAndColor cFourthAricraftExistAndInactie = new CareerPosAndColor(3350, 1800, 124, 120, 135);
+        static CareerPosAndColor cSecondAricraftExistAndInactie = new CareerPosAndColor(1850, 1800, 116, 120, 135); //changed from color 124,120,135
+        static CareerPosAndColor cThirdAricraftExistAndInactie = new CareerPosAndColor(2600, 1800, 116, 120, 135);
+        static CareerPosAndColor cFourthAricraftExistAndInactie = new CareerPosAndColor(3350, 1800, 116, 120, 135);
 
         static CareerPosAndColor cSecondAricraftExistAndActive = new CareerPosAndColor(1850, 1800, 203, 203, 203);//203+/-52
         static CareerPosAndColor cThirdAricraftExistAndActive = new CareerPosAndColor(2600, 1800, 203, 203, 203);//203+/-52
 
-        static CareerPosAndColor cNthAricraftExistAndInactie = new CareerPosAndColor(3030, 1800, 124, 120, 135);
+        static CareerPosAndColor cNthAricraftExistAndInactie = new CareerPosAndColor(3030, 1800, 116, 120, 135); //changed from color 124,120,135
         static CareerPosAndColor cNthAricraftExistAndActive = new CareerPosAndColor(3030, 1800, 203, 203, 203);//203+/-52
 
-        static CareerPosAndColor cLastAricraftExistAndInactie = new CareerPosAndColor(2990, 1800, 124, 120, 135);
+        static CareerPosAndColor cLastAricraftExistAndInactie = new CareerPosAndColor(2990, 1800, 116, 120, 135); //changed from color 124,120,135
         static CareerPosAndColor cLastAricraftExistAndActive = new CareerPosAndColor(2990, 1800, 203, 203, 203);//203+/-52
 
         static CareerPosAndColor cFirstAircraftOpenSubMenuInactive = new CareerPosAndColor(1088, 1828, 52, 111, 195);
         static CareerPosAndColor cFirstAircraftOpenSubMenuActive = new CareerPosAndColor(1088, 1828, 203, 203, 203);//203+/-52
         static CareerPosAndColor cSecondAircraftOpenSubMenuActive = new CareerPosAndColor(1838, 1828, 203, 203, 203);//203+/-52
-        static CareerPosAndColor cThirdAircraftOpenSubMenuActive = new CareerPosAndColor(2588, 1828, 203, 203, 203);//203+/-52
+        static CareerPosAndColor cThirdAircraftOpenSubMenuActive = new CareerPosAndColor(2582, 1828, 203, 203, 203);//203+/-52 //pos 2588 is 6 pixel wrong very strange but distance aircraft 1 to 2 is inf act different than 2 to 3
         static CareerPosAndColor cNthAircraftOpenSubMenuActive = new CareerPosAndColor(3028, 1828, 203, 203, 203);//203+/-52
         static CareerPosAndColor cLastAircraftOpenSubMenuActive = new CareerPosAndColor(2978, 1828, 203, 203, 203);//203+/-52
 
         static CareerPosAndColor cFirstAircraftOpenSubMenuBottom = new CareerPosAndColor(1088, 1959, 48, 106, 189);
         static CareerPosAndColor cSecondAircraftOpenSubMenuBottom = new CareerPosAndColor(1838, 1959, 48, 106, 189);
-        static CareerPosAndColor cThirdAircraftOpenSubMenuBottom = new CareerPosAndColor(2588, 1959, 48, 106, 189);
+        static CareerPosAndColor cThirdAircraftOpenSubMenuBottom = new CareerPosAndColor(2582, 1959, 48, 106, 189);
         static CareerPosAndColor cNthAircraftOpenSubMenuBottom = new CareerPosAndColor(3028, 1959, 48, 106, 189);
         static CareerPosAndColor cLastAircraftOpenSubMenuBottom = new CareerPosAndColor(2978, 1959, 48, 106, 189);
 
@@ -951,6 +955,67 @@ namespace CareerAutomationTests
             oColor = new CareerPixelColor(vRed, vGreen, vBlue);
         }
 
+        /// <summary>
+        /// Checks the whole 21 pixel horizontal for a Color Step
+        /// </summary>
+        /// <param name="iCareer"></param>
+        /// <param name="iPos"></param>
+        /// <param name="oIsHomogneous"></param>
+        /// <param name="iSaveName"></param>
+        private static void ReadScreenPixelHorizontalHomogeneity(CareerNamespace.CareerAutomation iCareer, CareerPixelPos iPos, out bool oIsHomogneous, string iSaveName = null)
+        {
+            oIsHomogneous = true;
+
+            CareerPixelPos vScreenScaledPos = TransfromPixelPos(iPos);
+
+            int cEpsilonColor = 5; //If a Color componet from left to right changes more than this value we detected inhomogeneity
+
+            int cRadius = 10;
+            Bitmap bmpScreenshot = iCareer.PartialScreenshot(vScreenScaledPos.mPosX - cRadius, vScreenScaledPos.mPosY - cRadius, 2 * cRadius + 1, 2 * cRadius + 1);
+
+
+            int vPixelsInX = bmpScreenshot.Width;
+            int vPixelsInY = bmpScreenshot.Height;
+            UInt32[,] vAreaBitmapArray = new UInt32[vPixelsInY, vPixelsInX];
+
+            GCHandle vGCHandle = GCHandle.Alloc(vAreaBitmapArray, GCHandleType.Pinned);
+            IntPtr vPointer = Marshal.UnsafeAddrOfPinnedArrayElement(vAreaBitmapArray, 0);
+
+            Bitmap vAreaBitmap = new Bitmap(vPixelsInX, vPixelsInY, vPixelsInX << 2, System.Drawing.Imaging.PixelFormat.Format32bppArgb, vPointer);
+
+            Graphics vAreaGraphics = Graphics.FromImage(vAreaBitmap);
+
+            vAreaGraphics.DrawImage(bmpScreenshot, new Point(0, 0));
+
+            if (!string.IsNullOrEmpty(iSaveName))
+            {
+                vAreaBitmap.Save(iSaveName + ".bmp");
+            }
+
+            UInt32 vValue = vAreaBitmapArray[cRadius, 0];
+            int vRed = (Int32)((vValue & 0x00FF0000) >> 16);
+            int vGreen = (Int32)((vValue & 0x0000FF00) >> 8);
+            int vBlue = (Int32)(vValue & 0x000000FF);
+
+            CareerPixelColor vRefColor = new CareerPixelColor(vRed, vGreen, vBlue);
+
+            for (int vXPixelPos = 1; vXPixelPos <= 2 * cRadius; vXPixelPos++)
+            {
+                vValue = vAreaBitmapArray[cRadius, vXPixelPos];
+                vRed = (Int32)((vValue & 0x00FF0000) >> 16);
+                vGreen = (Int32)((vValue & 0x0000FF00) >> 8);
+                vBlue = (Int32)(vValue & 0x000000FF);
+
+                if ((Math.Abs(vRefColor.mRed - vRed) > cEpsilonColor) ||
+                    (Math.Abs(vRefColor.mGreen - vGreen) > cEpsilonColor) ||
+                    (Math.Abs(vRefColor.mBlue - vBlue) > cEpsilonColor))
+                {
+                    oIsHomogneous = false;
+                    return;
+                }
+            }
+        }
+
         private static CareerPixelPos TransfromPixelPos(CareerPixelPos iPos)
         {
             double vRelativeToReferenceScreenCenterPosX = (double)(iPos.mPosX) - 0.5 * (double)(cReferenceScreenWidth);
@@ -989,7 +1054,7 @@ namespace CareerAutomationTests
 
                 CareerPixelColor vColor1;
                 ReadScreenPixel(iCareer, cCompanyIdentifySplashScreen.mPos, out vColor1);
-                int vColorEpsilon = 20;
+                int vColorEpsilon = cLittleColorToleranceEpsilon;
                 if (!IsColorWithinExpectedColor(vColorEpsilon, cCompanyIdentifySplashScreen.mColor, vColor1))
                 {
                     vScreenFound = false;
@@ -1014,17 +1079,17 @@ namespace CareerAutomationTests
 
                 CareerPixelColor vColor1;
                 ReadScreenPixel(iCareer, cAllCompanyIdentifyActiveFirstBottomLeft.mPos, out vColor1); //"AllCompFirst"
-                int vColorEpsilon1 = 20;
+                int vColorEpsilon1 = cLittleColorToleranceEpsilon;
                 bool vFound1 = IsColorWithinExpectedColor(vColorEpsilon1, cAllCompanyIdentifyActiveFirstBottomLeft.mColor, vColor1);
 
                 CareerPixelColor vColor2;
                 ReadScreenPixel(iCareer, cAllCompanyIdentifyInactiveFirstBottomLeft.mPos, out vColor2);
-                int vColorEpsilon2 = 20;
+                int vColorEpsilon2 = cLittleColorToleranceEpsilon;
                 bool vFound2 = IsColorWithinExpectedColor(vColorEpsilon2, cAllCompanyIdentifyInactiveFirstBottomLeft.mColor, vColor2);
 
                 CareerPixelColor vColor3;
                 ReadScreenPixel(iCareer, cAllCompanyIdentifySelectedFirstBottomLeft.mPos, out vColor3);
-                int vColorEpsilon3 = 52;
+                int vColorEpsilon3 = cLargeColorToleranceEpsilon;
                 bool vFound3 = IsColorWithinExpectedColor(vColorEpsilon3, cAllCompanyIdentifySelectedFirstBottomLeft.mColor, vColor3);
 
                 if (!(vFound1 || vFound2 || vFound3))
@@ -1086,8 +1151,8 @@ namespace CareerAutomationTests
 
                 CareerPixelColor vColor1;
                 ReadScreenPixel(iCareer, cAllCompanyIdentifySelectedFirstBottomLeft.mPos, out vColor1);
-                int vWhiteEpsilon = 52;
-                bool vFound1 = IsColorWithinExpectedColor(vWhiteEpsilon, cAllCompanyIdentifySelectedFirstBottomLeft.mColor, vColor1);
+                int vColorEpsilon = cLargeColorToleranceEpsilon;
+                bool vFound1 = IsColorWithinExpectedColor(vColorEpsilon, cAllCompanyIdentifySelectedFirstBottomLeft.mColor, vColor1);
 
                 if (!vFound1)
                 {
@@ -1113,7 +1178,7 @@ namespace CareerAutomationTests
 
                 CareerPixelColor vColor1;
                 ReadScreenPixel(iCareer, cCompanyIdentifyActive.mPos, out vColor1);
-                int vColorEpsilon = 20;
+                int vColorEpsilon = cLittleColorToleranceEpsilon;
                 if (!IsColorWithinExpectedColor(vColorEpsilon, cCompanyIdentifyActive.mColor, vColor1))
                 {
                     vScreenFound = false;
@@ -1146,7 +1211,7 @@ namespace CareerAutomationTests
 
                 CareerPixelColor vColor1;
                 ReadScreenPixel(iCareer, cCompanyIdentifyActive.mPos, out vColor1);
-                int vColorEpsilon = 20;
+                int vColorEpsilon = cLittleColorToleranceEpsilon;
                 if (!IsColorWithinExpectedColor(vColorEpsilon, cCompanyIdentifyActive.mColor, vColor1))
                 {
                     vScreenFound = false;
@@ -1174,22 +1239,22 @@ namespace CareerAutomationTests
 
             CareerPixelColor vColor1;
             ReadScreenPixel(iCareer, cVerticalBarUpperEndInnerInactive.mPos, out vColor1);
-            int vColorEpsilon1 = 20;
+            int vColorEpsilon1 = cLittleColorToleranceEpsilon;
             bool vFound1 = IsColorWithinExpectedColor(vColorEpsilon1, cVerticalBarUpperEndInnerInactive.mColor, vColor1);
 
             CareerPixelColor vColor2;
             ReadScreenPixel(iCareer, cVerticalBarUpperEndInnerActive.mPos, out vColor2);
-            int vColorEpsilon2 = 20;
+            int vColorEpsilon2 = cLittleColorToleranceEpsilon;
             bool vFound2 = IsColorWithinExpectedColor(vColorEpsilon2, cVerticalBarUpperEndInnerActive.mColor, vColor2);
 
             CareerPixelColor vColor3;
             ReadScreenPixel(iCareer, cVerticalBarLowerEndInnerInactive.mPos, out vColor3);
-            int vColorEpsilon3 = 20;
+            int vColorEpsilon3 = cLittleColorToleranceEpsilon;
             bool vFound3 = IsColorWithinExpectedColor(vColorEpsilon3, cVerticalBarLowerEndInnerInactive.mColor, vColor3);
 
             CareerPixelColor vColor4;
             ReadScreenPixel(iCareer, cVerticalBarLowerEndInnerActive.mPos, out vColor4);
-            int vColorEpsilon4 = 20;
+            int vColorEpsilon4 = cLittleColorToleranceEpsilon;
             bool vFound4 = IsColorWithinExpectedColor(vColorEpsilon4, cVerticalBarLowerEndInnerActive.mColor, vColor4);
 
             if ((vFound1 || vFound2) && (vFound3 || vFound4))
@@ -1205,7 +1270,7 @@ namespace CareerAutomationTests
 
             CareerPixelColor vColor4;
             ReadScreenPixel(iCareer, cVerticalBarLowerEndInnerActive.mPos, out vColor4);
-            int vColorEpsilon4 = 20;
+            int vColorEpsilon4 = cLittleColorToleranceEpsilon;
             bool vFound4 = IsColorWithinExpectedColor(vColorEpsilon4, cVerticalBarLowerEndInnerActive.mColor, vColor4);
 
             if (vFound4)
@@ -1219,31 +1284,39 @@ namespace CareerAutomationTests
         private static bool IsHorizontalScrollBar(CareerNamespace.CareerAutomation iCareer)
         {
 
-            CareerPixelColor vColor1;
-            ReadScreenPixel(iCareer, cHorizontalBarRightEndInnerInactive.mPos, out vColor1);
+            bool vIsHomogenous;
+            ReadScreenPixelHorizontalHomogeneity(iCareer, cHorizontalBarRightEndInnerInactive.mPos, out vIsHomogenous);
 
-            int vColorEpsilon = 15; //20 doesn't work in FullHD 
-            if (IsColorWithinExpectedColor(vColorEpsilon, cHorizontalBarRightEndInnerInactive.mColor, vColor1))
-            {
-                return true;
-            }
+            return !vIsHomogenous;
 
-            CareerPixelColor vColor2;
-            ReadScreenPixel(iCareer, cHorizontalBarRightEndInnerActive.mPos, out vColor2);
-            if (IsColorWithinExpectedColor(vColorEpsilon, cHorizontalBarRightEndInnerActive.mColor, vColor2))
-            {
-                return true;
-            }
+            //The below doesn't work safe..because the office background changes the colors drastical
 
-            return false;
+            //CareerPixelColor vColor1;
+            //ReadScreenPixel(iCareer, cHorizontalBarRightEndInnerInactive.mPos, out vColor1);
+
+            //int vColorEpsilon = 15; //20 doesn't work in FullHD 
+            //if (IsColorWithinExpectedColor(vColorEpsilon, cHorizontalBarRightEndInnerInactive.mColor, vColor1))
+            //{
+            //    return true;
+            //}
+
+            //CareerPixelColor vColor2;
+            //ReadScreenPixel(iCareer, cHorizontalBarRightEndInnerActive.mPos, out vColor2);
+            //if (IsColorWithinExpectedColor(vColorEpsilon, cHorizontalBarRightEndInnerActive.mColor, vColor2))
+            //{
+            //    return true;
+            //}
+
+            //return false;
         }
+
         private static bool IsHorizontalScrollBarFarLeft(CareerNamespace.CareerAutomation iCareer)
         {
 
             CareerPixelColor vColor1;
             ReadScreenPixel(iCareer, cHorizontalBarLeftEndInnerActive.mPos, out vColor1);
 
-            int vColorEpsilon = 20;
+            int vColorEpsilon = cLittleColorToleranceEpsilon;
             if (IsColorWithinExpectedColor(vColorEpsilon, cHorizontalBarLeftEndInnerActive.mColor, vColor1))
             {
                 return true;
@@ -1258,7 +1331,7 @@ namespace CareerAutomationTests
             CareerPixelColor vColor1;
             ReadScreenPixel(iCareer, cHorizontalBarRightEndInnerActive.mPos, out vColor1);
 
-            int vColorEpsilon = 20;
+            int vColorEpsilon = cLittleColorToleranceEpsilon;
             if (IsColorWithinExpectedColor(vColorEpsilon, cHorizontalBarRightEndInnerActive.mColor, vColor1))
             {
                 return true;
@@ -1276,13 +1349,13 @@ namespace CareerAutomationTests
             CareerPixelColor vColor1;
             ReadScreenPixel(iCareer, cFirstAricraftExistAndInactie.mPos, out vColor1);
 
-            int vColorEpsilon = 20;
+            int vColorEpsilon = cLittleColorToleranceEpsilon;
             if (IsColorWithinExpectedColor(vColorEpsilon, cFirstAricraftExistAndInactie.mColor, vColor1))
             {
                 return true;
             }
 
-            int vColorEpsilon2 = 52;
+            int vColorEpsilon2 = cLargeColorToleranceEpsilon;
             CareerPixelColor vColor2;
             ReadScreenPixel(iCareer, cFirstAircraftExistAndActive.mPos, out vColor2);
             if (IsColorWithinExpectedColor(vColorEpsilon2, cFirstAircraftExistAndActive.mColor, vColor2))
@@ -1299,7 +1372,7 @@ namespace CareerAutomationTests
             CareerPixelColor vColor1;
             ReadScreenPixel(iCareer, cFirstAircraftExistAndActive.mPos, out vColor1);
 
-            int vColorEpsilon = 52;
+            int vColorEpsilon = cLargeColorToleranceEpsilon;
             if (IsColorWithinExpectedColor(vColorEpsilon, cFirstAircraftExistAndActive.mColor, vColor1))
             {
                 return true;
@@ -1314,7 +1387,7 @@ namespace CareerAutomationTests
             CareerPixelColor vColor1;
             ReadScreenPixel(iCareer, cBuyAricraftActive.mPos, out vColor1);
 
-            int vColorEpsilon = 20;
+            int vColorEpsilon = cLittleColorToleranceEpsilon;
             if (IsColorWithinExpectedColor(vColorEpsilon, cBuyAricraftActive.mColor, vColor1))
             {
                 return true;
@@ -1331,7 +1404,7 @@ namespace CareerAutomationTests
             CareerPixelColor vColor1;
             ReadScreenPixel(iCareer, cSecondAricraftExistAndInactie.mPos, out vColor1);
 
-            int vColorEpsilon = 20;
+            int vColorEpsilon = cLittleColorToleranceEpsilon;
             if (IsColorWithinExpectedColor(vColorEpsilon, cSecondAricraftExistAndInactie.mColor, vColor1))
             {
                 vAdditionalPlaneCount++;
@@ -1356,7 +1429,7 @@ namespace CareerAutomationTests
                     CareerPixelColor vColor1;
                     ReadScreenPixel(iCareer, cFirstAircraftExistAndActive.mPos, out vColor1);
 
-                    int vColorEpsilon = 52;
+                    int vColorEpsilon = cLargeColorToleranceEpsilon;
                     if (IsColorWithinExpectedColor(vColorEpsilon, cFirstAircraftExistAndActive.mColor, vColor1))
                     {
                         return true;
@@ -1367,7 +1440,7 @@ namespace CareerAutomationTests
                     CareerPixelColor vColor1;
                     ReadScreenPixel(iCareer, cSecondAricraftExistAndActive.mPos, out vColor1);
 
-                    int vColorEpsilon = 52;
+                    int vColorEpsilon = cLargeColorToleranceEpsilon;
                     if (IsColorWithinExpectedColor(vColorEpsilon, cSecondAricraftExistAndActive.mColor, vColor1))
                     {
                         return true;
@@ -1378,7 +1451,7 @@ namespace CareerAutomationTests
                     CareerPixelColor vColor1;
                     ReadScreenPixel(iCareer, cThirdAricraftExistAndActive.mPos, out vColor1);
 
-                    int vColorEpsilon = 52;
+                    int vColorEpsilon = cLargeColorToleranceEpsilon;
                     if (IsColorWithinExpectedColor(vColorEpsilon, cThirdAricraftExistAndActive.mColor, vColor1))
                     {
                         return true;
@@ -1389,7 +1462,7 @@ namespace CareerAutomationTests
                     CareerPixelColor vColor1;
                     ReadScreenPixel(iCareer, cNthAricraftExistAndActive.mPos, out vColor1);
 
-                    int vColorEpsilon = 52;
+                    int vColorEpsilon = cLargeColorToleranceEpsilon;
                     if (IsColorWithinExpectedColor(vColorEpsilon, cNthAricraftExistAndActive.mColor, vColor1))
                     {
                         return true;
@@ -1413,8 +1486,8 @@ namespace CareerAutomationTests
                     CareerPixelColor vColor2;
                     ReadScreenPixel(iCareer, cFirstAircraftOpenSubMenuBottom.mPos, out vColor2);
 
-                    int vColorEpsilon1 = 52;
-                    int vColorEpsilon2 = 20;
+                    int vColorEpsilon1 = cLargeColorToleranceEpsilon;
+                    int vColorEpsilon2 = cLittleColorToleranceEpsilon;
                     if ((IsColorWithinExpectedColor(vColorEpsilon1, cFirstAircraftOpenSubMenuActive.mColor, vColor1)) &&
                         (IsColorWithinExpectedColor(vColorEpsilon2, cFirstAircraftOpenSubMenuBottom.mColor, vColor2)))
                     {
@@ -1428,8 +1501,8 @@ namespace CareerAutomationTests
                     CareerPixelColor vColor2;
                     ReadScreenPixel(iCareer, cSecondAircraftOpenSubMenuBottom.mPos, out vColor2);
 
-                    int vColorEpsilon1 = 52;
-                    int vColorEpsilon2 = 20;
+                    int vColorEpsilon1 = cLargeColorToleranceEpsilon;
+                    int vColorEpsilon2 = cLittleColorToleranceEpsilon;
                     if ((IsColorWithinExpectedColor(vColorEpsilon1, cSecondAircraftOpenSubMenuActive.mColor, vColor1)) &&
                         (IsColorWithinExpectedColor(vColorEpsilon2, cSecondAircraftOpenSubMenuBottom.mColor, vColor2)))
                     {
@@ -1443,8 +1516,8 @@ namespace CareerAutomationTests
                     CareerPixelColor vColor2;
                     ReadScreenPixel(iCareer, cThirdAircraftOpenSubMenuBottom.mPos, out vColor2);
 
-                    int vColorEpsilon1 = 52;
-                    int vColorEpsilon2 = 20;
+                    int vColorEpsilon1 = cLargeColorToleranceEpsilon;
+                    int vColorEpsilon2 = cLittleColorToleranceEpsilon;
                     if ((IsColorWithinExpectedColor(vColorEpsilon1, cThirdAircraftOpenSubMenuActive.mColor, vColor1)) &&
                         (IsColorWithinExpectedColor(vColorEpsilon2, cThirdAircraftOpenSubMenuBottom.mColor, vColor2)))
                     {
@@ -1458,8 +1531,8 @@ namespace CareerAutomationTests
                     CareerPixelColor vColor2;
                     ReadScreenPixel(iCareer, cLastAircraftOpenSubMenuBottom.mPos, out vColor2);
 
-                    int vColorEpsilon1 = 52;
-                    int vColorEpsilon2 = 20;
+                    int vColorEpsilon1 = cLargeColorToleranceEpsilon;
+                    int vColorEpsilon2 = cLittleColorToleranceEpsilon;
                     if ((IsColorWithinExpectedColor(vColorEpsilon1, cLastAircraftOpenSubMenuActive.mColor, vColor1)) &&
                         (IsColorWithinExpectedColor(vColorEpsilon2, cLastAircraftOpenSubMenuBottom.mColor, vColor2)))
                     {
@@ -1489,7 +1562,7 @@ namespace CareerAutomationTests
             CareerPixelColor vColor1;
             ReadScreenPixel(iCareer, cWashActive.mPos, out vColor1);
 
-            int vColorEpsilon = 20;
+            int vColorEpsilon = cLittleColorToleranceEpsilon;
             if (IsColorWithinExpectedColor(vColorEpsilon, cWashActive.mColor, vColor1))
             {
                 return true;
@@ -1503,7 +1576,7 @@ namespace CareerAutomationTests
             CareerPixelColor vColor1;
             ReadScreenPixel(iCareer, cCheckUpActive.mPos, out vColor1);
 
-            int vColorEpsilon = 20;
+            int vColorEpsilon = cLittleColorToleranceEpsilon;
             if (IsColorWithinExpectedColor(vColorEpsilon, cCheckUpActive.mColor, vColor1))
             {
                 return true;
@@ -1518,7 +1591,7 @@ namespace CareerAutomationTests
             CareerPixelColor vColor1;
             ReadScreenPixel(iCareer, cDelegateActive.mPos, out vColor1);
 
-            int vColorEpsilon = 20;
+            int vColorEpsilon = cLittleColorToleranceEpsilon;
             if (IsColorWithinExpectedColor(vColorEpsilon, cDelegateActive.mColor, vColor1))
             {
                 return true;
@@ -1534,7 +1607,7 @@ namespace CareerAutomationTests
             CareerPixelColor vColor1;
             ReadScreenPixel(iCareer, cWashSelected.mPos, out vColor1);
 
-            int vColorEpsilon = 52;
+            int vColorEpsilon = cLargeColorToleranceEpsilon;
             if (IsColorWithinExpectedColor(vColorEpsilon, cWashSelected.mColor, vColor1))
             {
                 return true;
@@ -1550,7 +1623,7 @@ namespace CareerAutomationTests
                 CareerPixelColor vColor1;
                 ReadScreenPixel(iCareer, cWashSelected.mPos, out vColor1);
 
-                int vColorEpsilon = 52;
+                int vColorEpsilon = cLargeColorToleranceEpsilon;
                 if (IsColorWithinExpectedColor(vColorEpsilon, cWashSelected.mColor, vColor1))
                 {
                     return true;
@@ -1566,7 +1639,7 @@ namespace CareerAutomationTests
             CareerPixelColor vColor1;
             ReadScreenPixel(iCareer, cCheckUpSelected.mPos, out vColor1);
 
-            int vColorEpsilon = 52;
+            int vColorEpsilon = cLargeColorToleranceEpsilon;
             if (IsColorWithinExpectedColor(vColorEpsilon, cCheckUpSelected.mColor, vColor1))
             {
                 return true;
@@ -1582,7 +1655,7 @@ namespace CareerAutomationTests
                 CareerPixelColor vColor1;
                 ReadScreenPixel(iCareer, cCheckUpSelected.mPos, out vColor1);
 
-                int vColorEpsilon = 52;
+                int vColorEpsilon = cLargeColorToleranceEpsilon;
                 if (IsColorWithinExpectedColor(vColorEpsilon, cCheckUpSelected.mColor, vColor1))
                 {
                     return true;
@@ -1601,7 +1674,7 @@ namespace CareerAutomationTests
             CareerPixelColor vColor1;
             ReadScreenPixel(iCareer, cDelegateSelected.mPos, out vColor1);
 
-            int vColorEpsilon = 52;
+            int vColorEpsilon = cLargeColorToleranceEpsilon;
             if (IsColorWithinExpectedColor(vColorEpsilon, cDelegateSelected.mColor, vColor1))
             {
                 return true;
@@ -1617,7 +1690,7 @@ namespace CareerAutomationTests
                 CareerPixelColor vColor1;
                 ReadScreenPixel(iCareer, cDelegateSelected.mPos, out vColor1);
 
-                int vColorEpsilon = 52;
+                int vColorEpsilon = cLargeColorToleranceEpsilon;
                 if (IsColorWithinExpectedColor(vColorEpsilon, cDelegateSelected.mColor, vColor1))
                 {
                     return true;
