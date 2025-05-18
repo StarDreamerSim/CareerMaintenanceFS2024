@@ -154,7 +154,7 @@
             this.Controls.Add(this.StatusTextBox);
             this.Controls.Add(this.ExecuteMaintenanceButton);
             this.Name = "CareerMaintenanceForm";
-            this.Text = "Career Maintenance V1.1";
+            this.Text = "Career Maintenance V1.2";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.CareerMaintenanceForm_FormClosing);
             this.Shown += new System.EventHandler(this.CareerMaintenanceForm_Shown);
             this.ResumeLayout(false);

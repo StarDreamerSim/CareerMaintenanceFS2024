@@ -97,7 +97,7 @@ namespace CareerAutomationTests
         static CareerPosAndColor cWashSelected = new CareerPosAndColor(190, 1730, 203, 203, 203);  //203+/-52 (232,232,232)
 
         static CareerPosAndColor cCheckUpInactive = new CareerPosAndColor(190, 1535, 59, 90, 96);
-        static CareerPosAndColor cCheckUpActive = new CareerPosAndColor(190, 1535, 53, 78, 137);
+        static CareerPosAndColor cCheckUpActive = new CareerPosAndColor(190, 1535, 28, 78, 137);
         static CareerPosAndColor cCheckUpSelected = new CareerPosAndColor(190, 1535, 203, 203, 203);  //203+/-52 (232,232,232)
 
         static CareerPosAndColor cDelegateInactive = new CareerPosAndColor(765, 1535, 25, 48, 64);
